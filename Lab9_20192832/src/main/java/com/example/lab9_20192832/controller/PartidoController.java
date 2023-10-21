@@ -1,8 +1,11 @@
 package com.example.lab9_20192832.controller;
 
-import com.example.lab9_20192832.entity.Deporte;
+import com.example.lab9_20192832.entity.Equipo;
+import com.example.lab9_20192832.entity.Participante;
+import com.example.lab9_20192832.entity.Participantepartido;
 import com.example.lab9_20192832.entity.Partido;
 import com.example.lab9_20192832.repository.HistorialPartidoRepository;
+import com.example.lab9_20192832.repository.ParticipantePartidoRepository;
 import com.example.lab9_20192832.repository.ParticipanteRepository;
 import com.example.lab9_20192832.repository.PartidoRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,17 +18,25 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/partido")
 public class PartidoController {
     final PartidoRepository partidoRepository;
     final HistorialPartidoRepository historialPartidoRepository;
+    final ParticipantePartidoRepository participantePartidoRepository;
+    final ParticipanteRepository participanteRepository;
 
     public PartidoController(PartidoRepository partidoRepository,
-                             HistorialPartidoRepository historialPartidoRepository){
+                             HistorialPartidoRepository historialPartidoRepository,
+                             ParticipantePartidoRepository participantePartidoRepository,
+                             ParticipanteRepository participanteRepository){
         this.partidoRepository=partidoRepository;
         this.historialPartidoRepository=historialPartidoRepository;
+        this.participantePartidoRepository=participantePartidoRepository;
+        this.participanteRepository=participanteRepository;
     }
 
     @PostMapping(value = "registro")
@@ -37,14 +48,30 @@ public class PartidoController {
 
         partidoRepository.save(partido);
 
+        List<Participante> PequipoA = participanteRepository.listaParticipantesEquipo(partido.getEquipoA().getIdEquipo());
+        List<Participante> PequipoB = participanteRepository.listaParticipantesEquipo(partido.getEquipoB().getIdEquipo());
+
         Date fechaActual = new Date();
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yy");
 
         String fechaFormateada = formato.format(fechaActual);
 
+        participantePartidoRepository.contadortabla();
+
         try {
             Date fechaComoDate = formato.parse(fechaFormateada);
+
             historialPartidoRepository.crearHistorial(partido.getIdPartido(),1,fechaComoDate);
+
+            for (Participante pA : PequipoA) {
+
+                participantePartidoRepository.crearPartixPartido(partido.getIdPartido(),pA.getIdParticipante(),fechaComoDate);
+            }
+
+            for (Participante pB : PequipoB) {
+
+                participantePartidoRepository.crearPartixPartido(partido.getIdPartido(),pB.getIdParticipante(),fechaComoDate);
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -65,4 +92,5 @@ public class PartidoController {
         }
         return ResponseEntity.badRequest().body(responseMap4);
     }
+
 }

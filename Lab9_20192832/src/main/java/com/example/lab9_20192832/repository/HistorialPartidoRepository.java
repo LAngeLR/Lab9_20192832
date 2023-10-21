@@ -14,7 +14,7 @@ public interface HistorialPartidoRepository extends JpaRepository<Historialparti
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO historialPartidos (partido_idpartido, partido_iddeporte, horaFecha) VALUES (?1, ?2, ?3)", nativeQuery = true)
+    @Query(value = "INSERT INTO historialPartidos (partido_idpartido, deporte_iddeporte, horaFecha) VALUES (?1, ?2, ?3)", nativeQuery = true)
     void crearHistorial(int partido, int deporte, Date hora);
 
 
