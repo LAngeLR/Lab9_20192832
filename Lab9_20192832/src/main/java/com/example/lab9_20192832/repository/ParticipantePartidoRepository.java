@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface ParticipantePartidoRepository extends JpaRepository<Participantepartido, Integer> {
@@ -21,4 +22,8 @@ public interface ParticipantePartidoRepository extends JpaRepository<Participant
     @Transactional
     @Query(value="ALTER TABLE participantespartido MODIFY COLUMN idParticipantesPartido INT AUTO_INCREMENT", nativeQuery=true)
     void contadortabla();
+
+    @Query(value = "SELECT p.idParticipantesPartido, p.partido_idpartido, p.participante_idparticipante, p.horaFecha FROM participantespartido p inner join participante u on p.participante_idparticipante=u.idparticipante where u.equipo=?1", nativeQuery = true)
+    List<Participantepartido> buscarEquipo(Integer idEquipo);
+
 }

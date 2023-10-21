@@ -83,6 +83,17 @@ public class PartidoController {
         return ResponseEntity.status(HttpStatus.OK).body(responseJson);
     }
 
+    @GetMapping(value = "getparticipantes")
+    public List<Participantepartido> listaPP(@RequestParam(name = "idequipo", required = false) Integer idEquipo) {
+        if (idEquipo != null) {
+            return participantePartidoRepository.buscarEquipo(idEquipo);
+        } else {
+            return participantePartidoRepository.findAll();
+        }
+    }
+
+
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<HashMap<String, String>> gestionException4(HttpServletRequest request) {
         HashMap<String, String> responseMap4 = new HashMap<>();

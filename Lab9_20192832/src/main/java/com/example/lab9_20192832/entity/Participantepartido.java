@@ -1,5 +1,6 @@
 package com.example.lab9_20192832.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import java.util.Date;
 @Table(name = "participantespartido")
 @Getter
 @Setter
+@JsonIgnoreProperties(value = {"idPartido","horaFecha"})
 public class Participantepartido {
 
     @Id
