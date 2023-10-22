@@ -81,15 +81,6 @@ public class PartidoController {
     }
 
     @GetMapping(value = "getparticipantes")
-    public List<Participantepartido> listaPP(@RequestParam(name = "idequipo", required = false) Integer idEquipo) {
-        if (idEquipo != null) {
-            return participantePartidoRepository.buscarEquipo(idEquipo);
-        } else {
-            return participantePartidoRepository.findAll();
-        }
-    }
-
-    @GetMapping(value = "getparticipantes")
     public ResponseEntity<List<Participantepartido>> listaPP(@RequestParam(name = "idequipo", required = false) String idStr) {
         try {
             if (idStr != null) {
