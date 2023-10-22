@@ -1,9 +1,6 @@
 package com.example.lab9_20192832.controller;
 
-import com.example.lab9_20192832.entity.Equipo;
-import com.example.lab9_20192832.entity.Participante;
-import com.example.lab9_20192832.entity.Participantepartido;
-import com.example.lab9_20192832.entity.Partido;
+import com.example.lab9_20192832.entity.*;
 import com.example.lab9_20192832.repository.HistorialPartidoRepository;
 import com.example.lab9_20192832.repository.ParticipantePartidoRepository;
 import com.example.lab9_20192832.repository.ParticipanteRepository;
@@ -92,6 +89,45 @@ public class PartidoController {
         }
     }
 
+    @GetMapping(value = "getparticipantes")
+    public ResponseEntity<List<Participantepartido>> listaPP(@RequestParam(name = "idequipo", required = false) String idStr) {
+        try {
+            if (idStr != null) {
+                int idEquipo = Integer.parseInt(idStr);
+                List<Participantepartido> participantes = participantePartidoRepository.buscarEquipo(idEquipo);
+                if (participantes.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+                }
+                return ResponseEntity.ok(participantes);
+            } else {
+                List<Participantepartido> participantes = participantePartidoRepository.findAll();
+                return ResponseEntity.ok(participantes);
+            }
+        } catch (NumberFormatException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+
+    @GetMapping(value = "gethistorialpartidos")
+    public ResponseEntity<List<Historialpartido>> listaHistorial(@RequestParam(name = "idequipo", required = false) String idStr) {
+
+        try {
+            if (idStr != null) {
+                int idEquipo = Integer.parseInt(idStr);
+                List<Historialpartido> historiales = historialPartidoRepository.buscarEquipoHistorial(idEquipo);
+                if (historiales.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+                }
+                return ResponseEntity.ok(historiales);
+            } else {
+                List<Historialpartido> historiales = historialPartidoRepository.findAll();
+                return ResponseEntity.ok(historiales);
+            }
+        } catch (NumberFormatException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
 
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
